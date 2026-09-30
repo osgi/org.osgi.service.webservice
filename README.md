@@ -1,5 +1,9 @@
 # org.osgi.service.webservice
 
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/osgi/org.osgi.service.webservice/badge)](https://securityscorecards.dev/viewer/?uri=github.com/osgi/org.osgi.service.webservice)
+[![build](https://github.com/osgi/org.osgi.service.webservice/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/osgi/org.osgi.service.webservice/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.osgi/org.osgi.service.webservice)](https://central.sonatype.com/artifact/org.osgi/org.osgi.service.webservice)
+
 OSGi Specification repo for org.osgi.service.webservice
 
 Part of the [OSGi Specification Project](https://projects.eclipse.org/projects/technology.osgi).
