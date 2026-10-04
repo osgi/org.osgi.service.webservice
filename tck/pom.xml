@@ -50,7 +50,7 @@
 		<osgi-test.version>1.2.0</osgi-test.version>
 		<servicemix-junit.version>4.13.2_1</servicemix-junit.version>
 		<stax-ex.version>2.1.0</stax-ex.version>
-		<stax2-api.version>4.2.2</stax2-api.version>
+		<stax2-api.version>4.3.1</stax2-api.version>
 		<streambuffer.version>2.1.0</streambuffer.version>
 		<woodstox-core.version>7.0.0</woodstox-core.version>
 	</properties>
