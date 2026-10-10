@@ -18,7 +18,7 @@
 package org.osgi.test.cases.webservice.junit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -108,7 +108,7 @@ public class WebServiceHelper {
 		conn.addRequestProperty("Content-Length", Integer.toString(bytes.length));
 		conn.getOutputStream().write(bytes);
 		
-		assertEquals(200, conn.getResponseCode());
+		assertThat(conn.getResponseCode()).isEqualTo(200);
 		
 		StringBuilder sb = new StringBuilder();
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), UTF_8))) {

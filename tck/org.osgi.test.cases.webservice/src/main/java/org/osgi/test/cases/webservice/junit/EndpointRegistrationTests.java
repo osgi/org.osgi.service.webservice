@@ -17,8 +17,7 @@
  *******************************************************************************/
 package org.osgi.test.cases.webservice.junit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.service.webservice.runtime.dto.FailedDTO.FAILURE_REASON_SERVICE_NOT_GETTABLE;
 import static org.osgi.service.webservice.runtime.dto.FailedEndpointDTO.FAILURE_REASON_CREATE_FAILED;
@@ -26,6 +25,7 @@ import static org.osgi.service.webservice.runtime.dto.FailedEndpointDTO.FAILURE_
 import static org.osgi.service.webservice.runtime.dto.FailedEndpointDTO.FAILURE_REASON_SET_HANDLER_FAILED;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +49,6 @@ import org.osgi.test.cases.webservice.webservices.WSEcho;
 import org.osgi.test.common.annotation.InjectBundleContext;
 import org.osgi.test.common.annotation.InjectService;
 import org.osgi.test.common.service.ServiceAware;
-import org.osgi.test.support.map.Maps;
 
 import jakarta.xml.ws.handler.Handler;
 
@@ -67,7 +66,7 @@ public class EndpointRegistrationTests {
 			throws InterruptedException {
 		webServiceRuntimeTracker = new WebServiceRuntimeTracker(ctx, runtime.getServiceReference());
 		webServiceRuntimeTracker.waitForQuiet(1, 5, TimeUnit.SECONDS);
-		assertTrue(webServiceRuntimeTracker.hasChangeCount(), "No Change Count detected for the WebserviceServiceRuntime");
+		assertThat(webServiceRuntimeTracker.hasChangeCount()).as("No Change Count detected for the WebserviceServiceRuntime").isTrue();
 	}
 	
 	@AfterEach
@@ -105,12 +104,11 @@ public class EndpointRegistrationTests {
 				(reg,dto) -> "The endpoint with id " + getServiceId(reg) + " was not present in the DTO endpoints " + dto,
 				6, TimeUnit.SECONDS);
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(WSEcho.ECHO_NS, "echoAction", Maps.mapOf("textIn", "BANG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(WSEcho.ECHO_NS, "echoAction", Collections.singletonMap("textIn", "BANG"));
 		
 		String soapResponse = WebServiceHelper.getSoapResponse(ECHO_URI, soapRequest);
 		
-		assertEquals("BANG", WebServiceHelper.extractResponse("echoActionResponse", soapResponse),
-				"Received an incorrect response from the Web Service");
+		assertThat(WebServiceHelper.extractResponse("echoActionResponse", soapResponse)).as("Received an incorrect response from the Web Service").isEqualTo("BANG");
 	}
 
 	static Object getServiceId(ServiceRegistration<?> reg) {
@@ -165,7 +163,7 @@ public class EndpointRegistrationTests {
 				(reg,dto) -> {
 					for(FailedEndpointDTO e : dto.failedEndpoints) {
 						if(getServiceId(reg).equals(e.implementor.id)) {
-							assertEquals(FAILURE_REASON_SERVICE_NOT_GETTABLE, e.failureCode, "Endpoint service should not be gettable");
+							assertThat(e.failureCode).as("Endpoint service should not be gettable").isEqualTo(FAILURE_REASON_SERVICE_NOT_GETTABLE);
 							return true;
 						}
 					}
@@ -189,7 +187,7 @@ public class EndpointRegistrationTests {
 				(reg,dto) -> {
 					for(FailedEndpointDTO e : dto.failedEndpoints) {
 						if(getServiceId(reg).equals(e.implementor.id)) {
-							assertEquals(FAILURE_REASON_CREATE_FAILED, e.failureCode, "Endpoint service should not be gettable");
+							assertThat(e.failureCode).as("Endpoint service should not be gettable").isEqualTo(FAILURE_REASON_CREATE_FAILED);
 							return true;
 						}
 					}
@@ -213,7 +211,7 @@ public class EndpointRegistrationTests {
 				(reg,dto) -> {
 					for(FailedEndpointDTO e : dto.failedEndpoints) {
 						if(getServiceId(reg).equals(e.implementor.id)) {
-							assertEquals(FAILURE_REASON_PUBLISH_FAILED, e.failureCode, "Endpoint service should not be gettable");
+							assertThat(e.failureCode).as("Endpoint service should not be gettable").isEqualTo(FAILURE_REASON_PUBLISH_FAILED);
 							return true;
 						}
 					}
@@ -243,7 +241,7 @@ public class EndpointRegistrationTests {
 				(reg,dto) -> {
 					for(FailedEndpointDTO e : dto.failedEndpoints) {
 						if(getServiceId(reg.get(0)).equals(e.implementor.id)) {
-							assertEquals(FAILURE_REASON_SET_HANDLER_FAILED, e.failureCode, "Endpoint service should not be gettable");
+							assertThat(e.failureCode).as("Endpoint service should not be gettable").isEqualTo(FAILURE_REASON_SET_HANDLER_FAILED);
 							return true;
 						}
 					}
