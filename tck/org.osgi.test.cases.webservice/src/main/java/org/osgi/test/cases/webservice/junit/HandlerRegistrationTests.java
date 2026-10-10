@@ -17,8 +17,7 @@
  *******************************************************************************/
 package org.osgi.test.cases.webservice.junit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.framework.Constants.SERVICE_RANKING;
 import static org.osgi.service.webservice.runtime.dto.FailedDTO.FAILURE_REASON_SERVICE_NOT_GETTABLE;
@@ -34,6 +33,7 @@ import static org.osgi.test.cases.webservice.webservices.WSEcho.ECHO_NS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -62,7 +62,6 @@ import org.osgi.test.cases.webservice.webservices.WSEchoEcho;
 import org.osgi.test.common.annotation.InjectBundleContext;
 import org.osgi.test.common.annotation.InjectService;
 import org.osgi.test.common.service.ServiceAware;
-import org.osgi.test.support.map.Maps;
 
 import jakarta.xml.ws.handler.Handler;
 
@@ -82,7 +81,7 @@ public class HandlerRegistrationTests {
 			throws InterruptedException {
 		webServiceRuntimeTracker = new WebServiceRuntimeTracker(ctx, runtime.getServiceReference());
 		webServiceRuntimeTracker.waitForQuiet(1, 5, TimeUnit.SECONDS);
-		assertTrue(webServiceRuntimeTracker.hasChangeCount(), "No Change Count detected for the WebserviceServiceRuntime");
+		assertThat(webServiceRuntimeTracker.hasChangeCount()).as("No Change Count detected for the WebserviceServiceRuntime").isTrue();
 	}
 	
 	@AfterEach
@@ -142,12 +141,11 @@ public class HandlerRegistrationTests {
 				6, TimeUnit.SECONDS);
 		
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Maps.mapOf("message", "BANG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Collections.singletonMap("message", "BANG"));
 		
 		String soapResponse = WebServiceHelper.getSoapResponse(REFLECT_URI, soapRequest);
 		
-		assertEquals("gNaB", WebServiceHelper.extractResponse("reflectResponse", soapResponse),
-				"The Web Service and Handler did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("reflectResponse", soapResponse)).as("The Web Service and Handler did not respond correctly").isEqualTo("gNaB");
 	}
 
 	/**
@@ -200,12 +198,11 @@ public class HandlerRegistrationTests {
 				 " and endpoint " + getServiceId(regs.get(0)) + " in the dto: " + dto,
 				6, TimeUnit.SECONDS);
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Maps.mapOf("message", "BANG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Collections.singletonMap("message", "BANG"));
 		
 		String soapResponse = WebServiceHelper.getSoapResponse(REFLECT_URI, soapRequest);
 		
-		assertEquals("gNaB", WebServiceHelper.extractResponse("reflectResponse", soapResponse),
-				"The Web Service and Handler did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("reflectResponse", soapResponse)).as("The Web Service and Handler did not respond correctly").isEqualTo("gNaB");
 	}
 
 	/**
@@ -273,16 +270,14 @@ public class HandlerRegistrationTests {
 						getServiceId(regs.get(1)) + " in the dto: " + dto,
 				6, TimeUnit.SECONDS);
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Maps.mapOf("message", "BANG"));
-		String soapRequest2 = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Maps.mapOf("message", "BONG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Collections.singletonMap("message", "BANG"));
+		String soapRequest2 = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Collections.singletonMap("message", "BONG"));
 		
 		String soapResponse = WebServiceHelper.getSoapResponse(REFLECT_URI, soapRequest);
 		String soapResponse2 = WebServiceHelper.getSoapResponse(REFLECT_URI_2, soapRequest2);
 		
-		assertEquals("gNaB", WebServiceHelper.extractResponse("reflectResponse", soapResponse),
-				"The Web Service and Handler did not respond correctly");
-		assertEquals("gNoB", WebServiceHelper.extractResponse("reflectResponse", soapResponse2),
-				"The Web Service and Handler did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("reflectResponse", soapResponse)).as("The Web Service and Handler did not respond correctly").isEqualTo("gNaB");
+		assertThat(WebServiceHelper.extractResponse("reflectResponse", soapResponse2)).as("The Web Service and Handler did not respond correctly").isEqualTo("gNoB");
 	}
 
 	/**
@@ -357,16 +352,14 @@ public class HandlerRegistrationTests {
 						getServiceId(regs.get(1)) + " in the dto: " + dto,
 				6, TimeUnit.SECONDS);
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Maps.mapOf("message", "BANG"));
-		String soapRequest2 = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Maps.mapOf("message", "BONG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Collections.singletonMap("message", "BANG"));
+		String soapRequest2 = WebServiceHelper.createSOAPMessage(Reflect.REFLECT_NS, "reflect", Collections.singletonMap("message", "BONG"));
 		
 		String soapResponse = WebServiceHelper.getSoapResponse(REFLECT_URI, soapRequest);
 		String soapResponse2 = WebServiceHelper.getSoapResponse(REFLECT_URI_2, soapRequest2);
 		
-		assertEquals("gNaB", WebServiceHelper.extractResponse("reflectResponse", soapResponse),
-				"The Web Service and Handler did not respond correctly");
-		assertEquals("GNOB", WebServiceHelper.extractResponse("reflectResponse", soapResponse2),
-				"The plain Web Service did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("reflectResponse", soapResponse)).as("The Web Service and Handler did not respond correctly").isEqualTo("gNaB");
+		assertThat(WebServiceHelper.extractResponse("reflectResponse", soapResponse2)).as("The plain Web Service did not respond correctly").isEqualTo("GNOB");
 	}
 
 	/**
@@ -424,8 +417,8 @@ public class HandlerRegistrationTests {
 						if(id.equals(e.implementor.id)) {
 							if(e.handlers.length == 2) {
 								// The handlers should be in natural service order
-								assertEquals(getServiceId(regs.get(1)), e.handlers[0].serviceReference.id, "Wrong handler order in DTO");
-								assertEquals(getServiceId(regs.get(2)), e.handlers[1].serviceReference.id, "Wrong handler order in DTO");
+								assertThat(e.handlers[0].serviceReference.id).as("Wrong handler order in DTO").isEqualTo(getServiceId(regs.get(1)));
+								assertThat(e.handlers[1].serviceReference.id).as("Wrong handler order in DTO").isEqualTo(getServiceId(regs.get(2)));
 								found = true;
 							}
 							break;
@@ -436,14 +429,13 @@ public class HandlerRegistrationTests {
 				(regs,dto) -> "Unable to find both handlers set for the endpoint in the dto: " + dto,
 				6, TimeUnit.SECONDS);
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Maps.mapOf("textIn", "BANG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Collections.singletonMap("textIn", "BANG"));
 		// Handler Chain is Case then Reverse, so:
 		// INBOUND -> Reverse, Case 1 
 		// OUTBOUND -> Case 0, Reverse 
 		String soapResponse = WebServiceHelper.getSoapResponse(ECHO_URI, soapRequest);
 
-		assertEquals("BAng", WebServiceHelper.extractResponse("echoActionResponse", soapResponse),
-				"The Web Service and Handler did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("echoActionResponse", soapResponse)).as("The Web Service and Handler did not respond correctly").isEqualTo("BAng");
 		
 		// Update the service ranking to re-order them
 		webServiceRuntimeTracker.waitForChange(
@@ -461,8 +453,8 @@ public class HandlerRegistrationTests {
 						if(id.equals(e.implementor.id)) {
 							if(e.handlers.length == 2) {
 								// The handler chain should now be in the opposite order
-								assertEquals(getServiceId(regs.get(2)), e.handlers[0].serviceReference.id, "Wrong handler order in DTO after ranking change");
-								assertEquals(getServiceId(regs.get(1)), e.handlers[1].serviceReference.id, "Wrong handler order in DTO after ranking change");
+								assertThat(e.handlers[0].serviceReference.id).as("Wrong handler order in DTO after ranking change").isEqualTo(getServiceId(regs.get(2)));
+								assertThat(e.handlers[1].serviceReference.id).as("Wrong handler order in DTO after ranking change").isEqualTo(getServiceId(regs.get(1)));
 								found = true;
 							}
 							break;
@@ -477,8 +469,7 @@ public class HandlerRegistrationTests {
 		// OUTBOUND -> Reverse, Case 0 
 		soapResponse = WebServiceHelper.getSoapResponse(ECHO_URI, soapRequest);
 
-		assertEquals("baNG", WebServiceHelper.extractResponse("echoActionResponse", soapResponse),
-				"The Web Service and Handlers did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("echoActionResponse", soapResponse)).as("The Web Service and Handlers did not respond correctly").isEqualTo("baNG");
 	}
 	
 	/**
@@ -521,14 +512,13 @@ public class HandlerRegistrationTests {
 				(regs,dto) -> "Unable to find both handlers set for the endpoint in the dto: " + dto,
 				6, TimeUnit.SECONDS).get(0));
 		
-		String soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Maps.mapOf("textIn", "BANG"));
+		String soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Collections.singletonMap("textIn", "BANG"));
 		// Handler Chain is Case then Double, so:
 		// INBOUND -> Double, Case 1 
 		// OUTBOUND -> Case 0, Double 
 		String soapResponse = WebServiceHelper.getSoapResponse(ECHO_URI, soapRequest);
 		
-		assertEquals("baNG_BANG_baNG_BANG", WebServiceHelper.extractResponse("echoActionResponse", soapResponse),
-				"The Web Service and Handler did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("echoActionResponse", soapResponse)).as("The Web Service and Handler did not respond correctly").isEqualTo("baNG_BANG_baNG_BANG");
 		
 		// Now register whiteboard handlers
 		action = () -> {
@@ -549,8 +539,8 @@ public class HandlerRegistrationTests {
 						if(endpointServiceId.equals(e.implementor.id)) {
 							if(e.handlers.length == 2) {
 								// The handlers should be in natural service order
-								assertEquals(getServiceId(regs.get(0)), e.handlers[0].serviceReference.id, "Wrong handler order in DTO");
-								assertEquals(getServiceId(regs.get(1)), e.handlers[1].serviceReference.id, "Wrong handler order in DTO");
+								assertThat(e.handlers[0].serviceReference.id).as("Wrong handler order in DTO").isEqualTo(getServiceId(regs.get(0)));
+								assertThat(e.handlers[1].serviceReference.id).as("Wrong handler order in DTO").isEqualTo(getServiceId(regs.get(1)));
 								found = true;
 							}
 							break;
@@ -561,14 +551,13 @@ public class HandlerRegistrationTests {
 				(regs,dto) -> "Unable to find both handlers set for the endpoint in the dto: " + dto,
 				6, TimeUnit.SECONDS);
 		
-		soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Maps.mapOf("textIn", "BANG"));
+		soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Collections.singletonMap("textIn", "BANG"));
 		// Handler Chain is Case then Double then Case then Reverse, so:
 		// INBOUND -> Reverse, Case 1, Double, Case 1
 		// OUTBOUND -> Case 0, Double, Case 0, Reverse
 		soapResponse = WebServiceHelper.getSoapResponse(ECHO_URI, soapRequest);
 		
-		assertEquals("BAnG_BA@g_BAnG_BA@@", WebServiceHelper.extractResponse("echoActionResponse", soapResponse),
-				"The Web Service and Handlers did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("echoActionResponse", soapResponse)).as("The Web Service and Handlers did not respond correctly").isEqualTo("BAnG_BA@g_BAnG_BA@@");
 				
 
 		// Update the service ranking to re-order them relative to the static chain
@@ -586,8 +575,8 @@ public class HandlerRegistrationTests {
 						if(endpointServiceId.equals(e.implementor.id)) {
 							if(e.handlers.length == 2) {
 								// The reported handler chain should be in the same order
-								assertEquals(getServiceId(regs.get(0)), e.handlers[0].serviceReference.id, "Wrong handler order in DTO after ranking change");
-								assertEquals(getServiceId(regs.get(1)), e.handlers[1].serviceReference.id, "Wrong handler order in DTO after ranking change");
+								assertThat(e.handlers[0].serviceReference.id).as("Wrong handler order in DTO after ranking change").isEqualTo(getServiceId(regs.get(0)));
+								assertThat(e.handlers[1].serviceReference.id).as("Wrong handler order in DTO after ranking change").isEqualTo(getServiceId(regs.get(1)));
 								found = true;
 							}
 							break;
@@ -598,14 +587,13 @@ public class HandlerRegistrationTests {
 				(regs,dto) -> "Unable to find both handlers set for the endpoint in the dto: " + dto,
 				6, TimeUnit.SECONDS);
 		
-		soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Maps.mapOf("textIn", "BANG"));
+		soapRequest = WebServiceHelper.createSOAPMessage(ECHO_NS, "echoAction", Collections.singletonMap("textIn", "BANG"));
 		// Handler Chain is Case then Case then Double then Reverse, so:
 		// INBOUND -> Reverse, Double, Case 1, Case 1
 		// OUTBOUND -> Case 0, Case 0, Double, Reverse
 		soapResponse = WebServiceHelper.getSoapResponse(ECHO_URI, soapRequest);
 		
-		assertEquals("BANG_BA@@_BANG_BA@@", WebServiceHelper.extractResponse("echoActionResponse", soapResponse),
-				"The Web Service and Handlers did not respond correctly");
+		assertThat(WebServiceHelper.extractResponse("echoActionResponse", soapResponse)).as("The Web Service and Handlers did not respond correctly").isEqualTo("BANG_BA@@_BANG_BA@@");
 	}
 	
 	
@@ -644,7 +632,7 @@ public class HandlerRegistrationTests {
 				(reg,dto) -> {
 					for(FailedHandlerDTO e : dto.failedHandlers) {
 						if(getServiceId(reg.get(1)).equals(e.serviceReference.id)) {
-							assertEquals(FAILURE_REASON_SERVICE_NOT_GETTABLE, e.failureCode, "Handler service should not be gettable");
+							assertThat(e.failureCode).as("Handler service should not be gettable").isEqualTo(FAILURE_REASON_SERVICE_NOT_GETTABLE);
 							return true;
 						}
 					}
@@ -672,7 +660,7 @@ public class HandlerRegistrationTests {
 				(reg,dto) -> {
 					for(FailedHandlerDTO e : dto.failedHandlers) {
 						if(getServiceId(reg).equals(e.serviceReference.id)) {
-							assertEquals(FAILURE_REASON_NO_MATCHING_ENDPOINT, e.failureCode, "Handler service has no endpoints to target");
+							assertThat(e.failureCode).as("Handler service has no endpoints to target").isEqualTo(FAILURE_REASON_NO_MATCHING_ENDPOINT);
 							return true;
 						}
 					}
@@ -706,7 +694,7 @@ public class HandlerRegistrationTests {
 				(reg,dto) -> {
 					for(FailedHandlerDTO e : dto.failedHandlers) {
 						if(getServiceId(reg.get(1)).equals(e.serviceReference.id)) {
-							assertEquals(FAILURE_REASON_NO_MATCHING_ENDPOINT, e.failureCode, "Handler service has no matching targets");
+							assertThat(e.failureCode).as("Handler service has no matching targets").isEqualTo(FAILURE_REASON_NO_MATCHING_ENDPOINT);
 							return true;
 						}
 					}
@@ -740,7 +728,7 @@ public class HandlerRegistrationTests {
 				(reg,dto) -> {
 					for(FailedHandlerDTO e : dto.failedHandlers) {
 						if(getServiceId(reg.get(1)).equals(e.serviceReference.id)) {
-							assertEquals(FAILURE_REASON_INVALID_FILTER, e.failureCode, "Handler service should have an invalid filter");
+							assertThat(e.failureCode).as("Handler service should have an invalid filter").isEqualTo(FAILURE_REASON_INVALID_FILTER);
 							return true;
 						}
 					}

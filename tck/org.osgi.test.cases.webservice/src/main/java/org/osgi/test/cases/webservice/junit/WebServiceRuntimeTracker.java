@@ -17,13 +17,14 @@
  *******************************************************************************/
 package org.osgi.test.cases.webservice.junit;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
-import org.junit.jupiter.api.Assertions;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
@@ -144,7 +145,7 @@ public class WebServiceRuntimeTracker {
 			if(updateNotifier.tryAcquire(time, unit)) {
 				long elapsed = unit.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS);
 				if(elapsed > maxTime) {
-					Assertions.fail("The WebserviceServiceRuntime did not settle within " + maxTime + " " + unit);
+					fail("The WebserviceServiceRuntime did not settle within " + maxTime + " " + unit);
 				}
 			} else {
 				break;
@@ -247,7 +248,7 @@ public class WebServiceRuntimeTracker {
 		long remaining = unit.toNanos(maxTime);
 		for(;;) {
 			if(!updateNotifier.tryAcquire(remaining, TimeUnit.NANOSECONDS)) {
-				Assertions.fail(errorMessage.apply(t, getServiceRuntime().getRuntimeDTO()));
+				fail(errorMessage.apply(t, getServiceRuntime().getRuntimeDTO()));
 			} else {
 				if(test.test(t, getServiceRuntime().getRuntimeDTO())) {
 					break;
@@ -299,7 +300,7 @@ public class WebServiceRuntimeTracker {
 				if(test.test(t, getServiceRuntime().getRuntimeDTO())) {
 					remaining = unit.toNanos(maxTime) - (System.nanoTime() - start);
 				} else {
-					Assertions.fail("The WebserviceServiceRuntime unexpectedly changed within " + maxTime + " " + unit);
+					fail("The WebserviceServiceRuntime unexpectedly changed within " + maxTime + " " + unit);
 				}
 			}
 		}

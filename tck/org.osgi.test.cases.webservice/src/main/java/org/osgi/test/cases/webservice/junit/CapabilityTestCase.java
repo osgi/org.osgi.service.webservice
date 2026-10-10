@@ -19,7 +19,7 @@ package org.osgi.test.cases.webservice.junit;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.osgi.namespace.implementation.ImplementationNamespace.CAPABILITY_VERSION_ATTRIBUTE;
 import static org.osgi.namespace.implementation.ImplementationNamespace.IMPLEMENTATION_NAMESPACE;
 import static org.osgi.namespace.service.ServiceNamespace.CAPABILITY_OBJECTCLASS_ATTRIBUTE;
@@ -100,10 +100,8 @@ public class CapabilityTestCase {
 				}
 			}
 		}
-		assertTrue(hasCapability,
-				"No osgi.service capability for the WebserviceServiceRuntime service");
-		assertTrue(uses,
-				"No suitable uses constraint on the runtime package for the WebserviceServiceRuntime service");
+		assertThat(hasCapability).as("No osgi.service capability for the WebserviceServiceRuntime service").isTrue();
+		assertThat(uses).as("No suitable uses constraint on the runtime package for the WebserviceServiceRuntime service").isTrue();
 	}
 
 	/**
@@ -158,13 +156,10 @@ public class CapabilityTestCase {
 			}
 		}
 
-		assertTrue(hasCapability,
-				"No osgi.implementation capability for the Web Service whiteboard implementation");
+		assertThat(hasCapability).as("No osgi.implementation capability for the Web Service whiteboard implementation").isTrue();
 
-		assertTrue(version,
-				"No osgi.implementation capability for the Web Service Whiteboard at version "
-						+ WEBSERVICE_SPECIFICATION_VERSION);
-		assertTrue(uses,
-				"The osgi.implementation capability for the JAX-RS API does not have the correct uses constraint");
+		assertThat(version).as("No osgi.implementation capability for the Web Service Whiteboard at version "
+						+ WEBSERVICE_SPECIFICATION_VERSION).isTrue();
+		assertThat(uses).as("The osgi.implementation capability for the JAX-RS API does not have the correct uses constraint").isTrue();
 	}
 }
