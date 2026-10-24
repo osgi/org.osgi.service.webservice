@@ -20,7 +20,7 @@
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 		<jakarta.xml.bind-api.version>4.0.5</jakarta.xml.bind-api.version>
 		<jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
-		<jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
+		<jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
 		<jaxb-core.version>4.0.5</jaxb-core.version>
 		<jaxb-impl.version>4.0.5</jaxb-impl.version>
 		<jaxws-rt.version>4.0.3</jaxws-rt.version>
