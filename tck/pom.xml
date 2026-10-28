@@ -24,7 +24,7 @@
 		<jaxb-core.version>4.0.5</jaxb-core.version>
 		<jaxb-impl.version>4.0.5</jaxb-impl.version>
 		<jaxws-rt.version>4.0.3</jaxws-rt.version>
-		<management-api.version>3.2.3</management-api.version>
+		<management-api.version>3.3.0</management-api.version>
 		<mimepull.version>1.11.0</mimepull.version>
 		<org.apache.felix.scr.version>2.2.10</org.apache.felix.scr.version>
 		<org.eclipse.osgi.technology.webservices.runtime.registrar.version>1.0.0-SNAPSHOT</org.eclipse.osgi.technology.webservices.runtime.registrar.version>
